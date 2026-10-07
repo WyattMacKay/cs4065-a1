@@ -1,0 +1,3 @@
+int USER_ID;
+final int TRIAL_COLOUR = 0xFF33DEFE;
+private final int DEFAULT_RECT_COLOUR = 0xFF3355FF;

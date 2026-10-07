@@ -3,7 +3,6 @@ import java.util.function.BiFunction;
 
 public class Block{
   private final int MAX_TRIALS = 20;
-  private final int DEFAULT_RECT_COLOUR = 0xFF3355FF;
   
   public final int ID;
   private final PApplet PARENT;
@@ -35,7 +34,7 @@ public class Block{
   
   private void printTrialStats(Trial t){
     // user#, block#, trial#, elapsedTime, numberOferrors
-    String out = String.format("%d, %d, %d, %d, %d", 0, ID, trialCount, t.getDuration(), t.errorCount);
+    String out = String.format("%d, %d, %d, %d, %d", USER_ID, ID, trialCount, t.getDuration(), t.errorCount);
     System.out.println(out);
   }
   

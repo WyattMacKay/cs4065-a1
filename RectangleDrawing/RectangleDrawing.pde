@@ -35,7 +35,7 @@ void getUserID(){
     }
     catch (NumberFormatException e){}
   }
-  // set permanent id
+  USER_ID = id;
 }
 
 void loadNextBlock(){
