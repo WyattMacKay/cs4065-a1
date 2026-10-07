@@ -25,6 +25,10 @@ public class Block{
   public void drawScene(){
     fill(startButton.colour);
     rect(startButton.x, startButton.y, startButton.w, startButton.h);
+    fill(0xFFFFFFFF);
+    textAlign(CENTER);
+    textSize(35);
+    text("Start", startButton.x, startButton.y + 10);  // Hardcoded because of odd behaviour
     for(Rectangle r : rectangles)
     {
       fill(r.colour);
