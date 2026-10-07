@@ -1,14 +1,18 @@
 import processing.sound.SoundFile;
+import java.util.function.BiFunction;
 
 public class Block{
+  private final int MAX_TRIALS = 20;
+  private final int DEFAULT_RECT_COLOUR = 0xFF3355FF;
+  
   public final int ID;
   private final PApplet PARENT;
-  private int trialCount = 0;
-  private Trial trial;  
-
-  private final int DEFAULT_RECT_COLOUR = 0xFF3355FF;
-
   private final int NUM_RECTS;  // 2, 4, 8
+  
+  private int trialCount = 0;
+  private Trial trial;
+  private Runnable callback;
+
   Rectangle startButton;
   Rectangle rectangles[];
   
@@ -47,7 +51,18 @@ public class Block{
     if(trialFinished){
       trialCount++;
       printTrialStats(trial);
+      if(trialCount >= MAX_TRIALS){
+        finishBlock();
+      }
     }
+  }
+  public void setCallback(Runnable r){
+    callback = r; 
+  }
+  private void finishBlock(){
+     if(callback != null){
+       callback.run();
+     }
   }
   
   

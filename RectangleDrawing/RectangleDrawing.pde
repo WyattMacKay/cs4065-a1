@@ -1,16 +1,21 @@
-import java.util.function.BiFunction;
+import javax.swing.JOptionPane;
 
 Block currBlock;
+int blockID = 0;
+final int MAX_BLOCKS = 3;
 
 void setup() {
   size(800, 600);
   rectMode(CENTER);
   noStroke();
-  currBlock = new Block(this, 1, 8);
+  getUserID();
+  loadNextBlock();
 }
 void draw() {
   background(204);
-  currBlock.drawScene();
+  if(currBlock != null){
+    currBlock.drawScene();
+  }
 }
 
 /* 
@@ -19,4 +24,30 @@ void draw() {
 */  
 void mousePressed() {
   currBlock.clicked(mouseX, mouseY);
+}
+
+void getUserID(){
+  int id = -1;
+  while(id < 0){
+    try{
+      String input = JOptionPane.showInputDialog(null, "User ID:");
+      id = Integer.parseInt(input);
+    }
+    catch (NumberFormatException e){}
+  }
+  // set permanent id
+}
+
+void loadNextBlock(){
+  blockID++;
+  if(blockID > MAX_BLOCKS){
+    endStudy();
+    return;
+  }
+  currBlock = new Block(this, blockID, 1 << blockID);
+  currBlock.setCallback(this::loadNextBlock);
+}
+
+void endStudy(){
+  currBlock = null;
 }
