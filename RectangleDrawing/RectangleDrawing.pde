@@ -14,13 +14,33 @@ void setup() {
 void draw() {
   background(204);
   fill(startButton.colour);
-  rect(startButton.x, startButton.y, startButton.width, startButton.height);
+  rect(startButton.x, startButton.y, startButton.w, startButton.h);
   for(Rectangle r : rectangles)
   {
     fill(r.colour);
-    rect(r.x, r.y, r.width, r.height);
+    rect(r.x, r.y, r.w, r.h);
   }
 }
+
+void mouseClicked() { 
+  final int MOUSE_X = mouseX;
+  final int MOUSE_Y = mouseY;
+  
+  System.out.println("Clicked on: " + ((source == -1) ? "N/A" : String.valueOf(source)));
+}
+
+// -1 is none
+int getContainingRectIndex(int x, int y){
+  int source = -1;
+  for(int i = 0; i < rectangles.length && source == -1; i++){
+    if(rectangles[i].containsPosition(x, y)){
+      source = i;
+    }
+  }
+  return source;
+}
+
+//---------------------------------------- Basic Rect logic-----------------------------------------
 
 void initializeStartButton(){
   final int W = 90;
@@ -52,33 +72,24 @@ void initializeRects(){
       rectangles[7] = makeRect.apply(startButton.x - offset, startButton.y - offset);
     }
   }
-  
-  // TODO: size 4, 8
 }
-
-void mouseMoved() { // Move gray circle
-  //moveX = mouseX;
-  //moveY = mouseY;
-}
-
-void mouseDragged() { // Move black circle
-  //dragX = mouseX;
-  //dragY = mouseY;
-}
-
-
 class Rectangle {
   int x;
   int y;
-  int width;
-  int height;
+  int w;
+  int h;
   int colour;
  
-  Rectangle(int posX, int posY, int width, int height, int colour){
+  Rectangle(int posX, int posY, int w, int h, int colour){
     this.x = posX;
     this.y = posY;
-    this.width = width;
-    this.height = height;
+    this.w = w;
+    this.h = h;
     this.colour = colour;
+  }
+  boolean containsPosition(int x, int y){
+    final int WIDTH_RANGE = w / 2;
+    final int HEIGHT_RANGE = h / 2;
+    return (x >= this.x - WIDTH_RANGE && x <= this.x + WIDTH_RANGE && y >= this.y - HEIGHT_RANGE && y <= this.y + HEIGHT_RANGE);  
   }
 }
