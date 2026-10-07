@@ -1,8 +1,11 @@
 import java.util.function.BiFunction;
 
+final int DEFAULT_RECT_COLOUR = 0xFF3355FF;
+
 int numRects = 8;  // 2, 4, 8
 Rectangle startButton;
 Rectangle rectangles[];
+Trial trial;
 
 void setup() {
   size(800, 600);
@@ -22,22 +25,43 @@ void draw() {
   }
 }
 
-void mouseClicked() { 
-  final int MOUSE_X = mouseX;
-  final int MOUSE_Y = mouseY;
-  
-  System.out.println("Clicked on: " + ((source == -1) ? "N/A" : String.valueOf(source)));
+/* 
+  mouseClicked would be nice but even small drags dont count as a click. mousePressed is 
+  on mouse down, which means the light will start before the subject is done a click.
+*/  
+void mousePressed() {
+  if(trial == null || !trial.isRunning()){
+    if(startButton.containsPoint(mouseX, mouseY)){
+      trial = new Trial(rectangles);
+      trial.startTrial();
+    }
+    return;
+  }// else
+  int source = getContainingRectIndex(mouseX, mouseY);
+  if(source == trial.chosenIndex){
+    trial.endTrial();
+    printTrialStats(trial);
+  }
+  else{
+    trial.errorCount++; 
+  }
 }
 
 // -1 is none
 int getContainingRectIndex(int x, int y){
   int source = -1;
   for(int i = 0; i < rectangles.length && source == -1; i++){
-    if(rectangles[i].containsPosition(x, y)){
+    if(rectangles[i].containsPoint(x, y)){
       source = i;
     }
   }
   return source;
+}
+
+void printTrialStats(Trial t){
+  // user#, block#, trial#, elapsedTime, numberOferrors
+  String out = String.format("%d, %d, %d, %d, %d", 0, 0, 0, t.getDuration(), t.errorCount);
+  System.out.println(out);
 }
 
 //---------------------------------------- Basic Rect logic-----------------------------------------
@@ -55,7 +79,7 @@ void initializeRects(){
   final int RECT_HEIGHT = 100;
   final int DIST_FROM_START = 200;
   BiFunction<Integer, Integer, Rectangle> makeRect = (x, y) -> {
-    return new Rectangle(x, y, RECT_WIDTH, RECT_HEIGHT, 0xFF3355FF); 
+    return new Rectangle(x, y, RECT_WIDTH, RECT_HEIGHT, DEFAULT_RECT_COLOUR); 
   };
   rectangles = new Rectangle[numRects];  
   rectangles[0] = makeRect.apply(startButton.x, startButton.y - DIST_FROM_START);
@@ -71,25 +95,5 @@ void initializeRects(){
       rectangles[6] = makeRect.apply(startButton.x - offset, startButton.y + offset);
       rectangles[7] = makeRect.apply(startButton.x - offset, startButton.y - offset);
     }
-  }
-}
-class Rectangle {
-  int x;
-  int y;
-  int w;
-  int h;
-  int colour;
- 
-  Rectangle(int posX, int posY, int w, int h, int colour){
-    this.x = posX;
-    this.y = posY;
-    this.w = w;
-    this.h = h;
-    this.colour = colour;
-  }
-  boolean containsPosition(int x, int y){
-    final int WIDTH_RANGE = w / 2;
-    final int HEIGHT_RANGE = h / 2;
-    return (x >= this.x - WIDTH_RANGE && x <= this.x + WIDTH_RANGE && y >= this.y - HEIGHT_RANGE && y <= this.y + HEIGHT_RANGE);  
   }
 }
