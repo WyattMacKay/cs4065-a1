@@ -1,16 +1,21 @@
+import processing.sound.SoundFile;
+
 import java.util.function.BiFunction;
 
 final int DEFAULT_RECT_COLOUR = 0xFF3355FF;
+SoundFile successfulClickSound; 
 
 int numRects = 8;  // 2, 4, 8
 Rectangle startButton;
 Rectangle rectangles[];
 Trial trial;
 
+
 void setup() {
   size(800, 600);
   rectMode(CENTER);
   noStroke();
+  successfulClickSound = new SoundFile(this, "ping.mp3");
   initializeStartButton();
   initializeRects();
 }
@@ -40,6 +45,7 @@ void mousePressed() {
   int source = getContainingRectIndex(mouseX, mouseY);
   if(source == trial.chosenIndex){
     trial.endTrial();
+    successfulClickSound.play();
     printTrialStats(trial);
   }
   else{
