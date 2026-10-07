@@ -44,10 +44,15 @@ void loadNextBlock(){
     endStudy();
     return;
   }
+  JOptionPane.showMessageDialog(null, "You are about to start block #" + blockID, 
+                                "Block Starting", JOptionPane.INFORMATION_MESSAGE);
   currBlock = new Block(this, blockID, 1 << blockID);
   currBlock.setCallback(this::loadNextBlock);
 }
 
 void endStudy(){
   currBlock = null;
+  JOptionPane.showMessageDialog(null, "Thank you for participating.", 
+                                "Study Complete", JOptionPane.INFORMATION_MESSAGE);
+  exit();
 }
