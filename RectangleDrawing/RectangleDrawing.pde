@@ -7,7 +7,6 @@ final int MAX_BLOCKS = 3;
 void setup() {
   size(800, 600);
   rectMode(CENTER);
-  noStroke();
   getUserID();
   loadNextBlock();
 }
